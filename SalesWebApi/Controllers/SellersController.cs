@@ -11,7 +11,7 @@ namespace SalesWebApi.Controllers
 {
     [ApiController]
     [Route("/sellers")]
-    public class SellersController : Controller
+    public class SellersController : ControllerBase
     {
         private readonly SellerService _sellerService;
         private readonly DepartmentService _departmentService;
@@ -57,7 +57,7 @@ namespace SalesWebApi.Controllers
             var departments = await _departmentService.FindAllAsync();
             var viewModel = new SellerFormViewModel { Departments = departments };
 
-            return Json(viewModel);
+            return Ok(viewModel);
         }
 
         [HttpPost]
