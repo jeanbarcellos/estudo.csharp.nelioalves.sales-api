@@ -33,6 +33,8 @@ namespace SalesWebApi.Models
         public Department Department { get; set; }
         public int DepartmentId { get; set; }
 
+        public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
+
         public Seller()
         {
         }
@@ -45,6 +47,21 @@ namespace SalesWebApi.Models
             BirthDate = birthDate;
             BaseSalary = baseSalary;
             Department = department;
+        }
+
+        public void AddSales(SalesRecord sr)
+        {
+            Sales.Add(sr);
+        }
+
+        public void RemoveSales(SalesRecord sr)
+        {
+            Sales.Remove(sr);
+        }
+
+        public double TotalSales(DateTime initial, DateTime final)
+        {
+            return Sales.Where(sr => sr.Date >= initial && sr.Date <= final).Sum(sr => sr.Amount);
         }
     }
 }
