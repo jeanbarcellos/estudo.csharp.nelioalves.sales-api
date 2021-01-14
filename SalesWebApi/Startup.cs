@@ -26,8 +26,9 @@ namespace SalesWebApi
             );
             services.AddScoped<SalesWebApiContext>();
 
-            services.AddScoped<SellerService>();
             services.AddScoped<DepartmentService>();
+            services.AddScoped<SellerService>();
+            services.AddScoped<SalesRecordService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
