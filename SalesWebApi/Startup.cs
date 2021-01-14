@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SalesWebApi.Data;
+using SalesWebApi.Services;
 
 namespace SalesWebApi
 {
@@ -24,6 +25,9 @@ namespace SalesWebApi
               options => options.UseNpgsql(Configuration.GetConnectionString("Default"))
             );
             services.AddScoped<SalesWebApiContext>();
+
+            services.AddScoped<SellerService>();
+            services.AddScoped<DepartmentService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
