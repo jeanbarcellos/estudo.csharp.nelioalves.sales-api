@@ -26,6 +26,7 @@ namespace SalesWebApi
             );
             services.AddScoped<SalesWebApiContext>();
 
+            services.AddScoped<SeedingService>();
             services.AddScoped<DepartmentService>();
             services.AddScoped<SellerService>();
             services.AddScoped<SalesRecordService>();
@@ -37,13 +38,20 @@ namespace SalesWebApi
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            SeedingService seedingService
+        )
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SalesWebApi v1"));
+
+                // Popula o banco de dados default
+                seedingService.Seed();
             }
 
             app.UseHttpsRedirection();
