@@ -16,7 +16,7 @@ namespace SalesWebApi.Models
 
         [Display(Name = "E-mail")]
         [Required(ErrorMessage = "O {0} é obrigatório")]
-        [EmailAddress(ErrorMessage = "Enter a valid email")]
+        [EmailAddress(ErrorMessage = "Informe um e-maill válido")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
@@ -28,8 +28,8 @@ namespace SalesWebApi.Models
 
         [Display(Name = "Salário base")]
         [Required(ErrorMessage = "{0} é obrigatório")]
-        [Range(100.0, 50000.0, ErrorMessage = "O {0} deve ser de {1} a {2}")]
-        [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Range(100.0, 50000.0, ErrorMessage = "O {0} deve ser de R$ {1:N} a R$ {2:N}")]
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double BaseSalary { get; set; }
 
         public Department Department { get; set; }

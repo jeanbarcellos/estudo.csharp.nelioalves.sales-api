@@ -13,6 +13,29 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet ef migrations add Initials
 ```
 
+### Formas de usar o método Created() no retorno do sucesso do POST
+
+Geralmente, após o sucesso da utilização do POST, um objeto é fornecido no corpo do response, juntamente com um header Location contendo a URL do produto recém-criado.
+Isso pode ser feito das seguintes maneiras:
+
+Forma 1
+
+```cs
+return CreatedAtAction(nameof(Details), new { id = department.Id }, department);
+```
+
+Forma 2
+
+```cs
+return Created(new Uri(Url.Link("Details", new { id = department.Id })), department);
+```
+
+Forma 3 - Retornando apenas o ID
+
+```cs
+return Created(department.Id.ToString(), department);
+```
+
 ### TO-DO
 
 - Resolver recursão nos retornos JSON

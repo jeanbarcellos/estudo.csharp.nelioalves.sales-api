@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace SalesWebApi.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int}", Name = "Details")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,25 +48,25 @@ namespace SalesWebApi.Controllers
             return Ok(department);
         }
 
-        // POST: Departments/Create
         [HttpPost]
         [Route("")]
         public async Task<IActionResult> Create([FromBody] Department department)
         {
+            // Obtém o ModelStateDictionary que contém o estado do modelo e da validação de vinculação do modelo.
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             _context.Add(department);
             await _context.SaveChangesAsync();
 
             // Um objeto Department é fornecido no corpo da resposta, juntamente com um cabeçalho de resposta Location contendo a URL do produto recém-criado.
-            // return CreatedAtAction(nameof(Details), new { id = department.Id }, department);
-            return Created(department.Id.ToString(), department);
+            return CreatedAtAction(nameof(Details), new { id = department.Id }, department);
+            // return Created(new Uri(Url.Link("Details", new { id = department.Id })), department);
+            // return Created(department.Id.ToString(), department);
         }
 
-        // PUT: Departments/Edit/5
         [HttpPut]
         [Route("{id:int}")]
         public async Task<IActionResult> Edit(int id, [FromBody] Department department)
@@ -100,7 +101,6 @@ namespace SalesWebApi.Controllers
             return Ok(department);
         }
 
-        // DELETE: Departments/Delete/5
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> Delete(int id)
