@@ -1,10 +1,9 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SalesWebApi.Data;
 using SalesWebApi.Models;
+using SalesWebApi.Services;
 
 namespace SalesWebApi.Controllers
 {
@@ -12,18 +11,18 @@ namespace SalesWebApi.Controllers
     [Route("/departments")]
     public class DepartmentsController : ControllerBase
     {
-        private readonly SalesWebApiContext _context;
+        private readonly DepartmentService _departmentService;
 
-        public DepartmentsController(SalesWebApiContext context)
+        public DepartmentsController(DepartmentService departmentService)
         {
-            _context = context;
+            _departmentService = departmentService;
         }
 
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> Index()
         {
-            var list = await _context.Department.ToListAsync();
+            var list = await _departmentService.FindAllAsync();
 
             return Ok(list);
         }
@@ -37,8 +36,7 @@ namespace SalesWebApi.Controllers
                 return BadRequest(new { message = "Id not provided" });
             }
 
-            var department = await _context.Department
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var department = await _departmentService.FindAsync(id.Value);
 
             if (department == null)
             {
@@ -58,13 +56,13 @@ namespace SalesWebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Add(department);
-            await _context.SaveChangesAsync();
+            await _departmentService.InsertAsync(department);
 
             // Um objeto Department é fornecido no corpo da resposta, juntamente com um cabeçalho de resposta Location contendo a URL do produto recém-criado.
             return CreatedAtAction(nameof(Details), new { id = department.Id }, department);
             // return Created(new Uri(Url.Link("Details", new { id = department.Id })), department);
             // return Created(department.Id.ToString(), department);
+            // return Ok(department);
         }
 
         [HttpPut]
@@ -73,7 +71,7 @@ namespace SalesWebApi.Controllers
         {
             if (id != department.Id)
             {
-                return NotFound();
+                return NotFound(new { message = "Id mismatch" });
             }
 
             if (!ModelState.IsValid)
@@ -83,12 +81,13 @@ namespace SalesWebApi.Controllers
 
             try
             {
-                _context.Update(department);
-                await _context.SaveChangesAsync();
+                await _departmentService.UpdateAsync(department);
+
+                return Ok(department);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DepartmentExists(department.Id))
+                if (!_departmentService.DepartmentExists(department.Id))
                 {
                     return NotFound();
                 }
@@ -97,30 +96,23 @@ namespace SalesWebApi.Controllers
                     throw;
                 }
             }
-
-            return Ok(department);
         }
 
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var department = await _context.Department.FindAsync(id);
-
-            if (department == null)
+            try
             {
-                return NotFound();
+                await _departmentService.RemoveAsync(id);
+
+                return Ok(new { message = "Successfully deleted" });
             }
-
-            _context.Department.Remove(department);
-            await _context.SaveChangesAsync();
-
-            return Ok(department);
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
         }
 
-        private bool DepartmentExists(int id)
-        {
-            return _context.Department.Any(e => e.Id == id);
-        }
     }
 }

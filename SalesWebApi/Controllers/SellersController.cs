@@ -55,6 +55,7 @@ namespace SalesWebApi.Controllers
         public async Task<IActionResult> Create()
         {
             var departments = await _departmentService.FindAllAsync();
+
             var viewModel = new SellerFormViewModel { Departments = departments };
 
             return Ok(viewModel);
@@ -67,6 +68,7 @@ namespace SalesWebApi.Controllers
             if (!ModelState.IsValid)
             {
                 var departments = await _departmentService.FindAllAsync();
+
                 var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
 
                 return BadRequest(viewModel);
@@ -74,9 +76,11 @@ namespace SalesWebApi.Controllers
 
             await _sellerService.InsertAsync(seller);
 
-            // return Ok(seller);
+            // Um objeto Seller é fornecido no corpo da resposta, juntamente com um cabeçalho de resposta Location contendo a URL do produto recém-criado.
             return CreatedAtAction(nameof(Details), new { id = seller.Id }, seller);
-            //return Created(seller.Id.ToString(), seller);
+            // return Created(new Uri(Url.Link("Details", new { id = department.Id })), department);
+            // return Created(seller.Id.ToString(), seller);
+            // return Ok(seller);
         }
 
 
@@ -97,6 +101,7 @@ namespace SalesWebApi.Controllers
             }
 
             List<Department> departments = await _departmentService.FindAllAsync();
+
             SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments };
 
             return Ok(viewModel);
@@ -106,17 +111,19 @@ namespace SalesWebApi.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> Edit(int id, [FromBody] Seller seller)
         {
-            if (!ModelState.IsValid)
-            {
-                var departments = await _departmentService.FindAllAsync();
-                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
-
-                return BadRequest(viewModel);
-            }
 
             if (id != seller.Id)
             {
                 return BadRequest(new { message = "Id mismatch" });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var departments = await _departmentService.FindAllAsync();
+
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+
+                return BadRequest(viewModel);
             }
 
             try
