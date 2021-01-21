@@ -1,16 +1,30 @@
 # Projeto: Sistema Web com ASP .NET Core MVC e Entity Framework (Atualizado para o .NET 5.0)
 
-[Udemy](https://www.udemy.com/course/programacao-orientada-a-objetos-csharp/)
+Adaptação para WEB API do projeto pertencente a **Seção 18** do '**Curso C# COMPLETO 2020 Programação Orientada a Objetos + Projetos**'.
 
-Projeto pertencente ao 'Curso C# COMPLETO 2020 Programação Orientada a Objetos + Projetos' do professor [Nélio Alves](https://www.udemy.com/user/nelio-alves/)
+Instrutor: 
+- [Nélio Alves](https://www.udemy.com/user/nelio-alves/)
 
-```
+Referências:
+- https://www.udemy.com/course/programacao-orientada-a-objetos-csharp/
+
+
+## Anotações: 
+
+Instalação de pacotes:
+
+```bash
 dotnet add package Microsoft.EntityFrameworkCore
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 
 dotnet add package Microsoft.EntityFrameworkCore.Design
+```
 
+Migrações:
+
+```bash
 dotnet ef migrations add Initials
+dotnet ef database update
 ```
 
 ### Formas de usar o método Created() no retorno do sucesso do POST
