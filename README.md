@@ -1,15 +1,18 @@
-# Projeto: Sistema Web com ASP .NET Core MVC e Entity Framework (Atualizado para o .NET 5.0)
+# Projeto: Web API com ASP.NET Core e Entity Framework (Atualizado para o .NET 5.0)
 
 Adaptação para WEB API do projeto pertencente a **Seção 18** do '**Curso C# COMPLETO 2020 Programação Orientada a Objetos + Projetos**'.
 
-Instrutor: 
+Instrutor:
+
 - [Nélio Alves](https://www.udemy.com/user/nelio-alves/)
 
 Referências:
+
 - https://www.udemy.com/course/programacao-orientada-a-objetos-csharp/
+- https://github.com/jeanbarcellos/estudo.csharp.nelioalves.sales
+- https://github.com/jeanbarcellos/estudo.csharp.nelioalves.sales-api-net2.1
 
-
-## Anotações: 
+## Anotações
 
 Instalação de pacotes:
 
@@ -50,7 +53,7 @@ Forma 3 - Retornando apenas o ID
 return Created(department.Id.ToString(), department);
 ```
 
-### TO-DO
+## TO-DO
 
 - Resolver recursão nos retornos JSON
 - Resolver problema no group GroupingSearch em SalesRecordsController
