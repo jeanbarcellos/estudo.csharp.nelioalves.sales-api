@@ -47,16 +47,15 @@ namespace SalesWebApi.Controllers
                 return NotFound(new { message = "Id not found" });
             }
 
-            return Ok(obj);
-        }
-
-        [HttpGet]
-        [Route("create")]
-        public async Task<IActionResult> Create()
-        {
-            var departments = await _departmentService.FindAllAsync();
-
-            var viewModel = new SellerFormViewModel { Departments = departments };
+            var viewModel = new SellerViewModel
+            {
+                Id = obj.Id,
+                Name = obj.Name,
+                Email = obj.Email,
+                BirthDate = obj.BirthDate,
+                BaseSalary = obj.BaseSalary,
+                DepartmentId = obj.Department.Id
+            };
 
             return Ok(viewModel);
         }
@@ -67,11 +66,7 @@ namespace SalesWebApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var departments = await _departmentService.FindAllAsync();
-
-                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
-
-                return BadRequest(viewModel);
+                return BadRequest(new { message = "Seller is invalid" });
             }
 
             await _sellerService.InsertAsync(seller);
@@ -81,30 +76,6 @@ namespace SalesWebApi.Controllers
             // return Created(new Uri(Url.Link("Details", new { id = department.Id })), department);
             // return Created(seller.Id.ToString(), seller);
             // return Ok(seller);
-        }
-
-
-        [HttpGet]
-        [Route("{id:int}/edit")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return BadRequest(new { message = "Id not provided" });
-            }
-
-            var obj = await _sellerService.FindByIdAsync(id.Value);
-
-            if (obj == null)
-            {
-                return NotFound(new { message = "Id not found" });
-            }
-
-            List<Department> departments = await _departmentService.FindAllAsync();
-
-            SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments };
-
-            return Ok(viewModel);
         }
 
         [HttpPut]
@@ -119,11 +90,7 @@ namespace SalesWebApi.Controllers
 
             if (!ModelState.IsValid)
             {
-                var departments = await _departmentService.FindAllAsync();
-
-                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
-
-                return BadRequest(viewModel);
+                return BadRequest(new { message = "Seller is invalid" });
             }
 
             try
